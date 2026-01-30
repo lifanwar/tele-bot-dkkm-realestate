@@ -92,8 +92,11 @@ async def show_gedung_detail(query, gedung, context, is_new_message=False):
         text_lines.append("━━━━━━━━━━━━━━━━")
     
     # Navigation buttons
-    keyboard.append([InlineKeyboardButton("« Back to Awal", callback_data="back_results")])
-    keyboard.append([InlineKeyboardButton("🔄 Pencarian Baru", callback_data="search_again")])
+    keyboard.append([
+        InlineKeyboardButton("« Back ke Awal", callback_data="back_results"),
+        InlineKeyboardButton("🔄 Pencarian Baru", callback_data="search_again")
+    ])
+
     
     reply_markup = InlineKeyboardMarkup(keyboard)
     
