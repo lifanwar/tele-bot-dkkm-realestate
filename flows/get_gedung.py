@@ -173,10 +173,17 @@ async def back_to_results(query, context):
     count = len(results)
     
     if not results:
-        await query.edit_message_text(
-            "❌ Data tidak ditemukan.\n\n"
-            "Silakan share lokasi untuk pencarian baru."
-        )
+        try:
+            await query.edit_message_text(
+                "❌ Data tidak ditemukan.\n\n"
+                "Silakan share lokasi untuk pencarian baru."
+            )
+        except:
+            # Jika gagal edit (misal message adalah foto), kirim message baru
+            await query.message.reply_text(
+                "❌ Data tidak ditemukan.\n\n"
+                "Silakan share lokasi kembali untuk pencarian baru."
+            )
         return
     
     # Format text hasil
