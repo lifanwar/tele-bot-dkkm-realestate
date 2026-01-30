@@ -143,10 +143,17 @@ async def back_to_gedung(query, context):
     gedung = context.user_data.get('current_gedung')
     
     if not gedung:
-        await query.edit_message_text(
-            "❌ Data tidak ditemukan.\n\n"
-            "Silakan lakukan pencarian baru."
-        )
+        try:
+            await query.edit_message_text(
+                "❌ Data tidak ditemukan.\n\n"
+                "Silakan lakukan pencarian baru."
+            )
+        except:
+            # Jika gagal edit (pesan adalah foto), kirim message baru
+            await query.message.reply_text(
+                "Sesi telah berakhir.\n"
+                "Silakan share lokasi Anda kembali untuk memulai pencarian.",
+            )
         return
     
     # Import di dalam function untuk avoid circular import
