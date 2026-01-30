@@ -13,19 +13,11 @@ from telegram.ext import (
 )
 
 from config import TELEGRAM_TOKEN
-from flows.handle_location import (
-    handle_location, 
-    search_nearby,
-    handle_search_again
-)
-from flows.get_gedung import (
-    get_gedung_detail,
-    back_to_results
-)
-from flows.get_detail_unit import (
-    get_unit_detail,
-    back_to_gedung
-)
+
+# Import Apps
+from flows.handle_location import (handle_location, search_nearby, handle_search_again)
+from flows.get_gedung import (get_gedung_detail, back_to_results)
+from flows.get_detail_unit import (get_unit_detail, back_to_gedung)
 
 # Setup logging
 logging.basicConfig(
