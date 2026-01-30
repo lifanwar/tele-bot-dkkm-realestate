@@ -2,7 +2,11 @@
 import aiohttp
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+# config
 from config import API_BASE_URL, API_KEY, RADIUS_OPTIONS
+# Import logger
+import logging
+logger = logging.getLogger(__name__)
 
 
 async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -93,18 +97,23 @@ async def search_nearby(update: Update, context: ContextTypes.DEFAULT_TYPE, radi
                     await show_nearby_results(query, data, context)
                 else:
                     error_text = await resp.text()
+
+                    # Log detail error
+                    logger.error(f"API Error {resp.status} - {url}")
+                    logger.error(f"Response: {error_text}")
+
+                    # Pesan umum ke user
                     await query.edit_message_text(
-                        f"❌ *Error {resp.status}*\n\n"
-                        f"```\n{error_text[:200]}\n```",
-                        parse_mode='Markdown'
+                        f"❌ Pencarian gagal. Silakan coba lagi.\n"
+                        f"(Kode error: {resp.status})"
                     )
     
     except Exception as e:
+        logger.error(f"Exception in search_nearby: {str(e)}", exc_info=True)
+
         await query.edit_message_text(
-            f"❌ *Terjadi Kesalahan*\n\n"
-            f"Detail: `{str(e)}`",
-            parse_mode='Markdown'
-        )
+        "❌ Terjadi kesalahan. Silakan coba lagi."
+    )
 
 
 async def show_nearby_results(query, data, context):
