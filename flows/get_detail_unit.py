@@ -76,12 +76,18 @@ async def show_unit_detail(query, unit, context):
     text_lines.append("━━━━━━━━━━━━━━━━")
     text_lines.append("_Terima kasih telah melihat detail unit_")
     
-    # Navigation buttons - UPDATED LABELS
-    keyboard = [
-        [InlineKeyboardButton("« Back", callback_data="back_gedung")],
-        [InlineKeyboardButton("« Back to Awal", callback_data="back_results")],
-        [InlineKeyboardButton("🔄 Pencarian Baru", callback_data="search_again")]
-    ]
+    keyboard = []
+
+    # Navigation buttons kolom 1
+    keyboard.append([
+        InlineKeyboardButton("« Back", callback_data="back_gedung"),
+        InlineKeyboardButton("« Back to Awal", callback_data="back_results"),
+    ])
+    # Navigation Buttons Kolom 2
+    keyboard.append([
+        InlineKeyboardButton("🔄 Pencarian Baru", callback_data="search_again")
+    ])
+
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     # Gabungkan text
