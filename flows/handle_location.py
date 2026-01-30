@@ -8,6 +8,18 @@ from config import API_BASE_URL, API_KEY, RADIUS_OPTIONS
 async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle when user shares location"""
     location = update.message.location
+
+    # Validasi location dan koordinat
+    if (not location or 
+        not isinstance(location.latitude, (int, float)) or
+        not isinstance(location.longitude, (int, float)) or
+        not (-90 <= location.latitude <= 90) or
+        not (-180 <= location.longitude <= 180)):
+        await update.message.reply_text(
+            "❌ Lokasi tidak valid. Silakan bagikan lokasi Anda kembali."
+        )
+        return
+
     
     # Simpan location di context
     context.user_data['lat'] = location.latitude
