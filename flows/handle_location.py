@@ -193,9 +193,31 @@ async def show_nearby_results(query, data, context):
     )
 
 
-async def handle_search_again(query):
+async def handle_search_again(query, context):
     """Handle search again button"""
     await query.answer()
+
+    lat = context.user_data.get('lat')
+    long = context.user_data.get('long')
+    
+    if not lat or not long:
+        # Jika tidak ada data lokasi setelah restart
+        try:
+            await query.edit_message_text(
+                "📍 *Data lokasi tidak ditemukan*\n\n"
+                "Sesi telah berakhir.\n"
+                "Silakan share lokasi Anda kembali untuk memulai pencarian.",
+                parse_mode='Markdown'
+            )
+        except:
+            # Jika gagal edit (pesan adalah foto), kirim message baru
+            await query.message.reply_text(
+                "📍 *Data lokasi tidak ditemukan*\n\n"
+                "Sesi telah berakhir.\n"
+                "Silakan share lokasi Anda kembali untuk memulai pencarian.",
+                parse_mode='Markdown'
+            )
+        return
     
     keyboard = []
     keyboard.append([
