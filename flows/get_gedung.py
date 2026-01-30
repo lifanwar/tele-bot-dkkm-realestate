@@ -62,6 +62,8 @@ async def show_gedung_detail(query, gedung, context, is_new_message=False):
     keyboard = []
     
     if units:
+        row = []  # Temporary row untuk menampung 3 button
+        
         for idx, unit in enumerate(units, 1):
             lantai = unit['lantai']
             unit_num = unit['unit_number']
@@ -81,15 +83,23 @@ async def show_gedung_detail(query, gedung, context, is_new_message=False):
             
             # Button untuk unit
             button_text = f"{idx}. Lt {lantai} ({unit_num})"
-            keyboard.append([InlineKeyboardButton(
+            button = InlineKeyboardButton(
                 button_text,
                 callback_data=f"unit_{unit['uuid']}"
-            )])
+            )
+            
+            row.append(button)
+            
+            # Jika row sudah 3 atau ini adalah unit terakhir, append ke keyboard
+            if len(row) == 3 or idx == len(units):
+                keyboard.append(row)
+                row = []  # Reset row untuk baris berikutnya
         
         text_lines.append("━━━━━━━━━━━━━━━━")
     else:
         text_lines.append("_Tidak ada unit tersedia_\n")
         text_lines.append("━━━━━━━━━━━━━━━━")
+    
     
     # Navigation buttons
     keyboard.append([
