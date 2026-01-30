@@ -2,7 +2,9 @@
 import aiohttp
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import API_BASE_URL, API_KEY
-
+# Import logger
+import logging
+logger = logging.getLogger(__name__)
 
 async def get_unit_detail(query, uuid: str, context):
     """Get unit detail by UUID"""
@@ -185,9 +187,10 @@ async def back_to_gedung(query, context):
         await show_gedung_detail(dummy_query, gedung, context)
         
     except Exception as e:
+        logger.error(f"Error back_to_gedung: {str(e)}", exc_info=True)
         # Fallback jika error
         await query.message.reply_text(
-            f"❌ Error saat kembali: `{str(e)}`\n\n"
-            "Silakan coba lagi atau lakukan pencarian baru.",
-            parse_mode='Markdown'
+            "❌ Terjadi kesalahan.\n\n"
+            "Silakan coba lagi atau lakukan pencarian baru."
         )
+
