@@ -114,7 +114,7 @@ def main():
     # Create application
     app = Application.builder().token(TELEGRAM_TOKEN).build()
 
-    # Lifecycle hooks - pakai RedisLifecycle class
+    # Lifecycle hooks Redis
     app.post_init = RedisLifecycle.post_init
     app.post_shutdown = RedisLifecycle.post_shutdown
     
