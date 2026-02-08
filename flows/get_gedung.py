@@ -2,11 +2,17 @@
 import aiohttp
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import API_BASE_URL, API_KEY
+from utils.redis_manager import cache
 
 
 async def get_gedung_detail(query, uuid: str, context):
     """Get building detail by UUID"""
     await query.answer("📥 Memuat detail gedung...")
+
+    cached_data = await cache.get_gedung(uuid)
+    if cached_data:
+        await show_gedung_detail(query, cached_data, context)
+        return
     
     try:
         async with aiohttp.ClientSession() as session:
@@ -19,6 +25,9 @@ async def get_gedung_detail(query, uuid: str, context):
             async with session.get(url, headers=headers) as resp:
                 if resp.status == 200:
                     data = await resp.json()
+                    # save to cache redis
+                    await cache.save_gedung(uuid, data)
+
                     await show_gedung_detail(query, data, context)
                 else:
                     await query.edit_message_text(

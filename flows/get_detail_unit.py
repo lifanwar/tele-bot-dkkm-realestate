@@ -2,6 +2,7 @@
 import aiohttp
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import API_BASE_URL, API_KEY
+from utils.redis_manager import cache
 # Import logger
 import logging
 logger = logging.getLogger(__name__)
@@ -9,7 +10,12 @@ logger = logging.getLogger(__name__)
 async def get_unit_detail(query, uuid: str, context):
     """Get unit detail by UUID"""
     await query.answer("📥 Memuat detail unit...")
-    
+
+    cached_data = await cache.get_unit(uuid)
+    if cached_data:
+        await show_unit_detail(query, cached_data, context)
+        return
+
     try:
         async with aiohttp.ClientSession() as session:
             url = f"{API_BASE_URL}/unit/{uuid}"
@@ -21,6 +27,9 @@ async def get_unit_detail(query, uuid: str, context):
             async with session.get(url, headers=headers) as resp:
                 if resp.status == 200:
                     data = await resp.json()
+                    # Save to redis
+                    await cache.save_unit(uuid, data)
+
                     await show_unit_detail(query, data, context)
                 else:
                     await query.edit_message_text(

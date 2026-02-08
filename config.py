@@ -15,3 +15,9 @@ API_KEY = os.getenv('APIKEY_IMARAH_BLACKLIST')
 # Radius presets
 RADIUS_OPTIONS = [5, 25, 50, 100, 200, 500, 1000]
 DEFAULT_RADIUS = 500
+
+# Redis config
+REDIS_URL = os.getenv('REDIS_URL') 
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+CACHE_TTL = int(os.getenv('CACHE_TTL', 3600))  # 1 jam

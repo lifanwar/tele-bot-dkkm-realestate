@@ -13,6 +13,7 @@ from telegram.ext import (
 )
 
 from config import TELEGRAM_TOKEN
+from utils.redis_manager import RedisLifecycle
 
 # Import Apps
 from flows.handle_location import (handle_location, search_nearby, handle_search_again)
@@ -112,6 +113,10 @@ def main():
     
     # Create application
     app = Application.builder().token(TELEGRAM_TOKEN).build()
+
+    # Lifecycle hooks - pakai RedisLifecycle class
+    app.post_init = RedisLifecycle.post_init
+    app.post_shutdown = RedisLifecycle.post_shutdown
     
     # Handlers
     app.add_handler(CommandHandler('start', start))
